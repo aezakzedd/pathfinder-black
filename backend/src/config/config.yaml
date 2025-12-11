@@ -64,6 +64,7 @@ gemini:
     If you detect any profanity in any language, return "I am unable to process that language. Please ask your question politely so I can assist you with Catanduanes tourism."
 
 profanity:
+    # Filipino profanity
     - gago
     - puta
     - tangina
@@ -71,6 +72,23 @@ profanity:
     - bobo
     - tanga
     - yawa
+    # English profanity
+    - shit
+    - fuck
+    - damn
+    - hell
+    - ass
+    - bitch
+    - crap
+    - piss
+    - dick
+    - cock
+    - pussy
+    - asshole
+    - bastard
+    - bullshit
+    - motherfucker
+    - son of a bitch
 # Offline Fallback Messages
 messages:
   offline_error: "I am currently offline, and I apologize for the limited service. {fact}"

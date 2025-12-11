@@ -219,6 +219,16 @@ class BackgroundEnhancer:
                     enhanced = self._enhance_with_gemini(job)
                     
                     if enhanced:
+                        # Filter profanity from enhanced response
+                        # Use the global profanity instance (already initialized in Pipeline.__init__)
+                        from better_profanity import profanity
+                        # Ensure profanity is initialized (in case it wasn't)
+                        if not profanity.CENSOR_WORDSET:
+                            profanity.load_censor_words()
+                            if 'profanity' in self.config:
+                                profanity.add_censor_words(self.config['profanity'])
+                        enhanced = profanity.censor(enhanced)
+                        
                         # Update cache with enhanced version
                         success = self.cache.update(job['query'], enhanced)
                         if success:
@@ -501,6 +511,12 @@ class Pipeline:
 
     def check_profanity(self, text):
         return profanity.contains_profanity(text)
+    
+    def censor_profanity(self, text):
+        """Censor profanity in text before returning to user"""
+        if not text:
+            return text
+        return profanity.censor(text)
 
     def normalize_query(self, text):
         """Simple normalization - lowercase and trim"""
@@ -662,6 +678,9 @@ class Pipeline:
             if version == 'raw':
                 print("[CACHE] Entry is RAW. Retrying background enhancement...")
                 self.enhancer.enqueue(normalized, answer, answer)
+            
+            # Filter profanity from cached response
+            answer = self.censor_profanity(answer)
                 
             elapsed = time.time() - start_time
             print(f"[RESPONSE TIME] {elapsed:.3f}s (CACHE HIT)")
@@ -677,10 +696,12 @@ class Pipeline:
         
         if analysis['intent'] == 'greeting':
             response = self.controller.get_greeting_response()
+            response = self.censor_profanity(response)
             return (response, [])
         
         if analysis['intent'] == 'nonsense':
             response = self.controller.get_nonsense_response()
+            response = self.censor_profanity(response)
             return (response, [])
         
         # Entity extraction (fast, regex-based)
@@ -714,10 +735,14 @@ class Pipeline:
         
         # Check if error response
         if "don't have information" in raw_facts.lower() or "not sure" in raw_facts.lower():
+            raw_facts = self.censor_profanity(raw_facts)
             return (raw_facts, [])
         
         # Construct raw answer (no LLM, just facts)
         raw_answer = f"{raw_facts}"
+        
+        # Filter profanity from response before caching and returning
+        raw_answer = self.censor_profanity(raw_answer)
         
         # Store in cache (RAW version)
         self.semantic_cache.set(normalized, raw_answer, places)
@@ -728,7 +753,7 @@ class Pipeline:
         elapsed = time.time() - start_time
         print(f"[RESPONSE TIME] {elapsed:.3f}s (RAW + QUEUED)")
         
-        # Return RAW answer immediately
+        # Return RAW answer immediately (already censored)
         return (raw_answer, places)
 
     def guide_question(self):
