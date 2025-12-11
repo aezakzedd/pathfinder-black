@@ -1,55 +1,48 @@
-annotated-doc==0.0.4
-annotated-types==0.7.0
-anyio==4.11.0
-bcrypt==5.0.0
-certifi==2025.11.12
-cffi==2.0.0
-click==8.3.1
-colorama==0.4.6
-cryptography==46.0.3
-dnspython==2.8.0
-ecdsa==0.19.1
-email-validator==2.3.0
+# Core Web Framework
 fastapi==0.121.3
-greenlet==3.2.4
-h11==0.16.0
-httpcore==1.0.9
-httptools==0.7.1
-httpx==0.28.1
-idna==3.11
-psycopg2-binary==2.9.11
-pyasn1==0.6.1
-pycparser==2.23
-pydantic==2.12.4
-pydantic_core==2.41.5
-pydantic-settings==2.0.3
-python-dotenv==1.2.1
-python-jose==3.5.0
-python-multipart==0.0.20
-PyYAML==6.0.3
-redis==7.1.0
-rsa==4.9.1
-six==1.17.0
-sniffio==1.3.1
-SQLAlchemy==2.0.44
-starlette==0.50.0
-typing-inspection==0.4.2
-typing_extensions==4.15.0
 uvicorn==0.38.0
-watchfiles==1.1.1
-websockets==15.0.1
-weasyprint==62.3
-firebase-admin==6.6.0
-qrcode[pil]==7.4.2
+starlette==0.50.0
+
+# Data Validation
+pydantic==2.12.4
+pydantic-core==2.41.5
+pydantic-settings==2.0.3
+
+# Database
+sqlalchemy==2.0.44
+# psycopg2-binary==2.9.11  # Only needed for PostgreSQL, not SQLite
+
+# Authentication & Security
+python-jose[cryptography]==3.5.0
+bcrypt==5.0.0
+python-dotenv==1.2.1
+
+# Vector Database & ML
 chromadb>=0.5.0,<1.0
 sentence-transformers==2.2.2
-google-generativeai==0.8.3
-deep-translator==1.11.4
+torch>=2.0.0
+numpy>=1.24.0
+
+# HTTP & API
+requests>=2.31.0
+
+# Configuration
+PyYAML==6.0.3
+
+# Content Filtering
 better-profanity==0.7.0
+
+# PDF Generation
+weasyprint==62.3
+
+# Firebase
+firebase-admin==6.6.0
+
+# QR Code Generation
+segno==1.6.0
+
+# Translation
+deep-translator==1.11.4
+
+# Protocol Buffers (required by firebase-admin)
 protobuf==4.24.4
-torch>=2.0.0
-numpy>=1.24.0
-requests>=2.31.0
-torch>=2.0.0
-numpy>=1.24.0
-requests>=2.31.0
